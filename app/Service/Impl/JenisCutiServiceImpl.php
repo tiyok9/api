@@ -4,6 +4,8 @@ namespace App\Service\Impl;
 
 use App\Repositories\JenisCutiRepository;
 use App\Service\JenisCutiService;
+use Exception;
+use Illuminate\Support\Facades\Log;
 
 class JenisCutiServiceImpl implements JenisCutiService
 {
@@ -15,5 +17,45 @@ class JenisCutiServiceImpl implements JenisCutiService
     public function __construct(JenisCutiRepository $jenisCuti)
     {
         $this->jenisCuti = $jenisCuti;
+    }
+
+    public function getData($search = '')
+    {
+        try {
+            return $this->jenisCuti->getData($search);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
+
+    public function store(mixed $data)
+    {
+        try {
+            return $this->jenisCuti->store($data);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function update(mixed $data, $id)
+    {
+        try {
+            return $this->jenisCuti->update($data, $id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            return $this->karyawan->destroy( $id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return false;
+        }
     }
 }
