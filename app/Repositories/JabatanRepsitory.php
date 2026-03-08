@@ -2,7 +2,46 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\Collection\JabatanCollection;
+use App\Models\Jabatan;
+
 class JabatanRepsitory
 {
+    protected $jabatan;
 
+    /**
+     * @param $jabatan
+     */
+    public function __construct(Jabatan $jabatan)
+    {
+        $this->jabatan = $jabatan;
+    }
+
+    public function getData(mixed $search)
+    {
+        $query = $this->jabatan->with('departemen');
+
+        if (!empty($search)) {
+            $query->where('jabatan', 'like', '%' . $search . '%');
+        }
+
+        $data = $query->paginate(10);
+        return new JabatanCollection($data);
+    }
+
+    public function store(mixed $data)
+    {
+        return $this->jabatan->create($data);
+    }
+
+    public function update(mixed $data, $id)
+    {
+        return $this->jabatan->where('id',$id)->update($data);
+    }
+
+    public function destroy($id)
+    {
+        return $this->jabatan->where('id',$id)->delete();
+
+    }
 }
