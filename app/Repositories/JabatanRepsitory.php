@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Resources\Collection\JabatanCollection;
+use App\Http\Resources\JabatanResource;
 use App\Models\Jabatan;
 
 class JabatanRepsitory
@@ -42,6 +43,13 @@ class JabatanRepsitory
     public function destroy($id)
     {
         return $this->jabatan->where('id',$id)->delete();
+
+    }
+
+    public function getJabatanById($id)
+    {
+        $data = $this->jabatan->where('id',$id)->with('departemen')->firstOrFail();
+        return new JabatanResource($data);
 
     }
 }

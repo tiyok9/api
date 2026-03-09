@@ -8,4 +8,5 @@ interface DepartemenService
     public function store(mixed $data);
     public function update(mixed $data, $id);
     public function destroy($id);
+    public function getDepartementById($id);
 }

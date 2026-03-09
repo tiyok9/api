@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DepartemenRequest;
-use App\Service\DepartemenService;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Service\UserService;
 use Illuminate\Http\Request;
 
-class DepartemenController extends Controller
+class UserController extends Controller
 {
-    protected $departemen;
+    protected $user;
 
     /**
-     * @param $departemen
+     * @param $user
      */
-    public function __construct(DepartemenService$departemen)
+    public function __construct(UserService $user)
     {
-        $this->departemen = $departemen;
+        $this->user = $user;
     }
 
     public function getData(Request $request)
     {
         $search = $request->search;
 
-        return $this->departemen->getData($search);
+        return $this->user->getData($search);
     }
 
-    public function store(DepartemenRequest $request)
+    public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        $response = $this->departemen->store($data);
+        $response = $this->user->store($data);
         if ($response) {
             return response()->json($response, 201);
         }
@@ -36,10 +37,10 @@ class DepartemenController extends Controller
         return response()->json($response, 400);
     }
 
-    public function update(DepartemenRequest $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
         $data = $request->validated();
-        $response = $this->departemen->update($data,$id);
+        $response = $this->user->update($data,$id);
         if ($response) {
             return response()->json($response, 201);
         }
@@ -49,15 +50,21 @@ class DepartemenController extends Controller
 
     public function destroy($id)
     {
-        $response = $this->departemen->destroy($id);
+
+        if (auth()->user() == $id) {
+            return response()->json('Failed Delete User', 400);
+        }
+        $response = $this->user->destroy($id);
         if ($response) {
             return response()->json($response, 201);
         }
 
         return response()->json($response, 400);
     }
-    public function getDepartementById($id)
+
+    public function getUserById($id)
     {
-        return $this->departemen->getDepartementById($id);
+
+        return $this->user->getUserById($id);
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Service;
 
-interface JenisCutiService
+interface UserService
 {
     public function getData(mixed $search);
     public function store(mixed $data);
     public function update(mixed $data, $id);
     public function destroy($id);
-    public function getJenisCutiById($id);
+    public function getUserById($id);
 }

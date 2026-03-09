@@ -56,4 +56,9 @@ class JenisCutiController extends Controller
 
         return response()->json($response, 400);
     }
+    public function getJenisCutiById($id)
+    {
+        return $this->jenisCuti->getJenisCutiById($id);
+    }
+
 }

@@ -8,4 +8,5 @@ return [
     App\Providers\JabatanServiceProvider::class,
     App\Providers\JenisCutiServiceProvider::class,
     App\Providers\KaryawanServiceProvider::class,
+    App\Providers\UserServiceProvider::class,
 ];

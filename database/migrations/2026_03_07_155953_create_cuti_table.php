@@ -21,6 +21,7 @@ return new class extends Migration
                 $table->date('tanggal_selesai');
                 $table->integer('jumlah_hari');
                 $table->text('alasan');
+                $table->string('img');
                 $table->enum('status',['pending','approved','rejected'])->default('pending');
                 $table->dateTime('approved_at')->nullable();
                 $table->uuid('approved_by')->nullable();

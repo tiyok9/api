@@ -59,4 +59,14 @@ class JabatanServiceImpl implements JabatanService
             return false;
         }
     }
+
+    public function getJabatanById($id)
+    {
+        try {
+            return $this->jabatan->getJabatanById($id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
 }

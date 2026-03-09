@@ -20,8 +20,9 @@ class KaryawanController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->karyawan->getData($search);
+        return $this->karyawan->getData($search,$perPage);
     }
 
     public function store(StoreKaryawanRequest $request)
@@ -54,5 +55,10 @@ class KaryawanController extends Controller
         }
 
         return response()->json($response, 400);
+    }
+
+    public function getKaryawanById($id)
+    {
+        return $this->karyawan->getKaryawanById($id);
     }
 }

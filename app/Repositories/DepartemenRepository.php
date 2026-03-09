@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Resources\Collection\DepartemenCollection;
+use App\Http\Resources\DepartemenResource;
 use App\Models\Departemen;
 
 class DepartemenRepository
@@ -43,6 +44,12 @@ class DepartemenRepository
     {
         return $this->departemen->where('id',$id)->delete();
 
+    }
+
+    public function getDepartementById($id)
+    {
+        $data = $this->departemen->where('id',$id)->firstOrFail();
+        return new DepartemenResource($data);
     }
 
 }

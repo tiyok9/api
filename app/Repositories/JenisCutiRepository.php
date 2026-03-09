@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Resources\Collection\JenisCutiCollection;
+use App\Http\Resources\JenisCutiResource;
 use App\Models\JenisCuti;
 
 class JenisCutiRepository
@@ -42,6 +43,14 @@ class JenisCutiRepository
     public function destroy($id)
     {
         return $this->jenisCuti->where('id',$id)->delete();
+
+    }
+
+    public function getJenisCutiById($id)
+    {
+
+        $data = $this->jenisCuti->where('id',$id)->firstOrFail();
+        return new JenisCutiResource($data);
 
     }
 }

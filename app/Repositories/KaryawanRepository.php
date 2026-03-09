@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Http\Resources\Collection\KaryawanCollection;
+use App\Http\Resources\KaryawanResource;
 use App\Models\Karyawan;
 
 class KaryawanRepository
@@ -17,15 +18,15 @@ class KaryawanRepository
         $this->karyawan = $karyawan;
     }
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
-        $query = $this->karyawan->query();
+        $query = $this->karyawan->with('jabatan');
 
         if (!empty($search)) {
             $query->where('nama', 'like', '%' . $search . '%');
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new KaryawanCollection($data);
     }
 
@@ -43,5 +44,11 @@ class KaryawanRepository
     {
         return $this->karyawan->where('id',$id)->delete();
 
+    }
+
+    public function getKaryawanById($id)
+    {
+        $data = $this->karyawan->where('id',$id)->with('jabatan')->firstOrFail();
+        return new KaryawanResource($data);
     }
 }

@@ -2,27 +2,28 @@
 
 namespace App\Service\Impl;
 
-use App\Repositories\DepartemenRepository;
-use App\Service\DepartemenService;
+use App\Repositories\UserRepository;
+use App\Service\UserService;
 use Exception;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
-class DepartemenServiceImpl implements DepartemenService
+class UserServiceImpl implements UserService
 {
-    protected $departemen;
+    protected $user;
 
     /**
-     * @param $departemen
+     * @param $user
      */
-    public function __construct(DepartemenRepository $departemen)
+    public function __construct(UserRepository $user)
     {
-        $this->departemen = $departemen;
+        $this->user = $user;
     }
 
     public function getData($search = '')
     {
         try {
-            return $this->departemen->getData($search);
+            return $this->user->getData($search);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];
@@ -32,7 +33,8 @@ class DepartemenServiceImpl implements DepartemenService
     public function store(mixed $data)
     {
         try {
-            return $this->departemen->store($data);
+            $data['password'] = Hash::make($data['password']);
+            return $this->user->store($data);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return false;
@@ -42,7 +44,12 @@ class DepartemenServiceImpl implements DepartemenService
     public function update(mixed $data, $id)
     {
         try {
-            return $this->departemen->update($data, $id);
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            }else {
+                unset($data['password']);
+            }
+            return $this->user->update($data, $id);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return false;
@@ -52,20 +59,20 @@ class DepartemenServiceImpl implements DepartemenService
     public function destroy($id)
     {
         try {
-            return $this->departemen->destroy( $id);
+            return $this->user->destroy( $id);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return false;
         }
     }
 
-    public function getDepartementById($id)
+    public function getUserById($id)
     {
         try {
-            return $this->departemen->getDepartementById($id);
+            return $this->user->getUserById($id);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];
-        }    }
-
+        }
+    }
 }

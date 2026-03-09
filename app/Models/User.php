@@ -6,11 +6,14 @@ use App\Models\HashId\HashId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Bridge\Client;
+use Laravel\Passport\Contracts\OAuthenticatable;
+use Laravel\Passport\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable,HashId;
+    use HasFactory, Notifiable,HashId ,HasApiTokens;
     protected $guarded = ["id"];
     public $incrementing = false;
     protected $keyType = 'string';
@@ -45,5 +48,15 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+    public function karyawan()
+    {
+        return $this->belongsTo(Karyawan::class, 'id_karyawan','id');
+    }
+
+    public function findForPassport($username)
+    {
+        return $this->where('username', $username)->first();
     }
 }

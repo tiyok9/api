@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('karyawan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
-            $table->string('nik');
-            $table->string('no_hp');
+            $table->char('nik', 16)->unique();
+            $table->string('no_hp',15);
             $table->text('alamat');
             $table->uuid('id_jabatan')->nullable();
             $table->foreign('id_jabatan')->references('id')->on('jabatan')->onDelete('restrict');

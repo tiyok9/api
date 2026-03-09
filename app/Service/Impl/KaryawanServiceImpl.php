@@ -19,10 +19,10 @@ class KaryawanServiceImpl implements KaryawanService
         $this->karyawan = $karyawan;
     }
 
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->karyawan->getData($search);
+            return $this->karyawan->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];
@@ -56,6 +56,16 @@ class KaryawanServiceImpl implements KaryawanService
         }catch (Exception $e){
             Log::error($e->getMessage());
             return false;
+        }
+    }
+
+    public function getKaryawanById($id)
+    {
+        try {
+            return $this->karyawan->getKaryawanById($id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
         }
     }
 }

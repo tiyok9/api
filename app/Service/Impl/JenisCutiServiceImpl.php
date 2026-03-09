@@ -52,10 +52,19 @@ class JenisCutiServiceImpl implements JenisCutiService
     public function destroy($id)
     {
         try {
-            return $this->karyawan->destroy( $id);
+            return $this->jenisCuti->destroy( $id);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return false;
         }
     }
+
+    public function getJenisCutiById($id)
+    {
+        try {
+            return $this->jenisCuti->getJenisCutiById($id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }    }
 }
