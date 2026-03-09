@@ -35,7 +35,7 @@ class AbsensiServiceImpl implements AbsensiService
         DB::beginTransaction();
         try {
             $cekAbsen = $this->absensi->cekAbsen($data['nik']);
-            $getIdByNik = $this->absensi->getIdByNik($data['nik']);
+            $getByNik = $this->absensi->getByNik($data['nik']);
 
             if (!empty($cekAbsen)) {
                 $absensiData = [
@@ -46,7 +46,7 @@ class AbsensiServiceImpl implements AbsensiService
             }else{
                 $absensiData = [
                    'tanggal' => Carbon::now(),
-                   'id_karyawan' => $getIdByNik,
+                   'id_karyawan' => $getByNik->id,
                     'jam_masuk' => now(),
                 ];
                 $response = $this->absensi->masuk($absensiData);
@@ -54,7 +54,7 @@ class AbsensiServiceImpl implements AbsensiService
             }
             if ($response) {
                 DB::commit();
-                return true;
+                return $getByNik;
             }
             DB::commit();
             return false;

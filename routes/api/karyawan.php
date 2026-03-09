@@ -5,6 +5,8 @@ use App\Http\Controllers\KaryawanController;
 
 Route::controller(KaryawanController::class)
     ->prefix('karyawan')
+    ->middleware(['auth:api'])
+
     ->name('karyawan.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');

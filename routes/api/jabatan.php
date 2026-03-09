@@ -3,6 +3,8 @@
 
 Route::controller(\App\Http\Controllers\JabatanController::class)
     ->prefix('jabatan')
+    ->middleware(['auth:api'])
+
     ->name('jabatan.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');

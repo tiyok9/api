@@ -26,7 +26,7 @@ class StoreCutiRequest extends FormRequest
         return [
             'id_jenis_cuti' => 'required|exists:jenis_cuti,id',
             'tanggal_mulai' => 'required|date',
-            'tanggal_selesai' => 'required|date',
+            'tanggal_selesai' => 'nullable|date',
             'alasan' => 'required|string',
         ];
     }

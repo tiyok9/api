@@ -25,6 +25,9 @@ class StoreJenisCutiRequest extends FormRequest
     {
         return [
             'jenis_cuti' => 'required|string',
+            'jatah_hari' => 'required|integer',
+            'require_attachment' => 'required|boolean',
+            'require_attachment' => 'required|boolean',
         ];
     }
 

@@ -2,6 +2,8 @@
 
 Route::controller(\App\Http\Controllers\UserController::class)
     ->prefix('user')
+    ->middleware(['auth:api'])
+
     ->name('user.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->char('nik', 16)->unique();
             $table->string('no_hp',15);
             $table->text('alamat');
+            $table->boolean('aktif')->default(true);
             $table->uuid('id_jabatan')->nullable();
             $table->foreign('id_jabatan')->references('id')->on('jabatan')->onDelete('restrict');
             $table->timestamps();

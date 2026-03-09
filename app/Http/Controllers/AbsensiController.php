@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAbsensiRequest;
 use App\Http\Requests\UpdateAbsensiRequest;
+use App\Http\Resources\KaryawanResource;
 use App\Service\AbsensiService;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,7 @@ class AbsensiController extends Controller
         $data = $request->validated();
         $response = $this->absensi->absen($data);
         if ($response) {
-            return response()->json($response, 201);
+            return new KaryawanResource($response);
         }
 
         return response()->json($response, 400);

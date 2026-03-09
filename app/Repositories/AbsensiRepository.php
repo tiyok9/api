@@ -52,9 +52,9 @@ class AbsensiRepository
         return $this->absensi->create($absensiData);
     }
 
-    public function getIdByNik(mixed $nik)
+    public function getByNik(mixed $nik)
     {
-        return $this->karyawan->where('nik', $nik)->firstOrFail()->id;
+        return $this->karyawan->where('nik', $nik)->firstOrFail();
     }
 
     public function pulang(mixed $absensiData,$id)

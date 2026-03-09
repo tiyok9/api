@@ -1,6 +1,8 @@
 <?php
 Route::controller(\App\Http\Controllers\JenisCutiController::class)
     ->prefix('jenis-cuti')
+    ->middleware(['auth:api'])
+
     ->name('jenis-cuti.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');

@@ -28,4 +28,9 @@ class Karyawan extends Model
     {
         return $this->hasMany(User::class, 'id_karyawan','id');
     }
+
+    public function cuti()
+    {
+        return $this->hasMany(Cuti::class, 'id_karyawan','id');
+    }
 }

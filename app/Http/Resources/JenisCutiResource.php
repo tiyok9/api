@@ -16,7 +16,10 @@ class JenisCutiResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'jenis_cuti' => $this->jenis_cuti
+            'jenis_cuti' => $this->jenis_cuti,
+            'jatah_hari' => $this->jatah_hari,
+            'require_end_date' => $this->require_end_date,
+            'require_attachment' => $this->require_attachment,
         ];
     }
 }

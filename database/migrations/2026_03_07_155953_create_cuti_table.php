@@ -18,10 +18,10 @@ return new class extends Migration
                 $table->uuid('id_jenis_cuti')->nullable();
                 $table->foreign('id_jenis_cuti')->references('id')->on('jenis_cuti')->onDelete('restrict');
                 $table->date('tanggal_mulai');
-                $table->date('tanggal_selesai');
+                $table->date('tanggal_selesai')->nullable();
                 $table->integer('jumlah_hari');
                 $table->text('alasan');
-                $table->string('img');
+                $table->string('img')->nullable();
                 $table->enum('status',['pending','approved','rejected'])->default('pending');
                 $table->dateTime('approved_at')->nullable();
                 $table->uuid('approved_by')->nullable();

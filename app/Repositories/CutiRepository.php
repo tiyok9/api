@@ -16,7 +16,7 @@ class CutiRepository
 
     public function getData(mixed $search)
     {
-        $query = $this->cuti->query();
+        $query = $this->cuti->with('karyawan');
 
         if (!empty($search)) {
             $query->whereHas('karyawan',function ($q) use ($search) {
