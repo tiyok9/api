@@ -82,4 +82,26 @@ class AbsensiServiceImpl implements AbsensiService
             return false;
         }
     }
+
+    public function getDataUser()
+    {
+        try {
+            $id = auth()->user()->id_karyawan;
+            return $this->absensi->getDataUser($id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
+
+    public function getRekap()
+    {
+        try {
+            $id = auth()->user()->id_karyawan;
+            return $this->absensi->getRekap($id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
 }

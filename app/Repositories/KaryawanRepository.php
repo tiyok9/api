@@ -51,4 +51,10 @@ class KaryawanRepository
         $data = $this->karyawan->where('id',$id)->with('jabatan')->firstOrFail();
         return new KaryawanResource($data);
     }
+
+    public function updateStatus($id)
+    {
+        return $this->karyawan->where('id',$id)->update(['status' => 1]);
+
+    }
 }

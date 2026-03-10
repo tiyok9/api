@@ -6,6 +6,8 @@ Route::controller(\App\Http\Controllers\AbsensiController::class)
     ->name('absensi.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');
+        Route::get('/user',  'getDataUser')->name('getDataUser');
+        Route::get('/rekap',  'getRekap')->name('getRekap');
         Route::post('/store',  'absen')->name('absen');
         Route::patch('/note/{id}',  'note')->name('note');
     });

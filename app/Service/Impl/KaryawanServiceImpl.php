@@ -68,4 +68,14 @@ class KaryawanServiceImpl implements KaryawanService
             return [];
         }
     }
+
+    public function updateStatus($id)
+    {
+        try {
+            return $this->karyawan->updateStatus( $id);
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
 }

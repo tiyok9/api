@@ -27,6 +27,10 @@ class AbsensiController extends Controller
         return $this->absensi->getData($search);
     }
 
+    public function getDataUser()
+    {
+        return $this->absensi->getDataUser();
+    }
     public function absen(StoreAbsensiRequest $request)
     {
         $data = $request->validated();
@@ -46,5 +50,10 @@ class AbsensiController extends Controller
         }
 
         return response()->json($response, 400);
+    }
+
+    public function getRekap()
+    {
+        return $this->absensi->getRekap();
     }
 }

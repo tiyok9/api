@@ -57,6 +57,16 @@ class KaryawanController extends Controller
         return response()->json($response, 400);
     }
 
+    public function updateStatus($id)
+    {
+        $response = $this->karyawan->updateStatus($id);
+        if ($response) {
+            return response()->json($response, 201);
+        }
+
+        return response()->json($response, 400);
+    }
+
     public function getKaryawanById($id)
     {
         return $this->karyawan->getKaryawanById($id);

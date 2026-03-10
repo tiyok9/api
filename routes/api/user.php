@@ -3,7 +3,6 @@
 Route::controller(\App\Http\Controllers\UserController::class)
     ->prefix('user')
     ->middleware(['auth:api'])
-
     ->name('user.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');
@@ -12,3 +11,7 @@ Route::controller(\App\Http\Controllers\UserController::class)
         Route::patch('/update/{id}',  'update')->name('update');
         Route::delete('/delete/{id}',  'destroy')->name('destroy');
     });
+
+Route::get('test',function(){
+    broadcast(new \App\Events\NotificationUser("New patient registered"));
+});

@@ -2,22 +2,27 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\Collection\AbsensiCollection;
+use App\Http\Resources\Collection\AbsensiUserCollection;
 use App\Models\Absensi;
+use App\Models\Cuti;
 use App\Models\Karyawan;
 
 class AbsensiRepository
 {
     protected $absensi;
     protected $karyawan;
+    protected $cuti;
 
     /**
      * @param $absensi
      * @param $karyawan
      */
-    public function __construct(Absensi $absensi,Karyawan $karyawan)
+    public function __construct(Absensi $absensi,Karyawan $karyawan,Cuti $cuti)
     {
         $this->absensi = $absensi;
         $this->karyawan = $karyawan;
+        $this->cuti = $cuti;
     }
 
     public function getData(mixed $search)
@@ -31,7 +36,7 @@ class AbsensiRepository
         }
 
         $data = $query->paginate(10);
-        return new CutiCollection($data);
+        return new AbsensiCollection($data);
     }
 
     public function store(mixed $data)
@@ -65,5 +70,43 @@ class AbsensiRepository
     public function note(mixed $data, $id)
     {
         return $this->absensi->where('id', $id)->update($data);
+    }
+
+    public function getDataUser($id)
+    {
+        $data = $this->absensi
+            ->selectRaw("
+            *,
+            CASE
+                WHEN jam_masuk::time <= '07:00:00' THEN 'present'
+                ELSE 'late'
+            END as status
+        ")
+            ->where('id_karyawan', $id)
+            ->paginate(10);
+
+        return new AbsensiUserCollection($data);
+    }
+
+    public function getRekap(mixed $id)
+    {
+        $present = Absensi::where('id_karyawan', $id)
+            ->whereTime('jam_masuk', '<=', '07:00:00')
+            ->count();
+
+        $late = Absensi::where('id_karyawan', $id)
+            ->whereTime('jam_masuk', '>', '07:00:00')
+            ->count();
+
+        $absent = Cuti::where('id_karyawan', $id)
+            ->where('status', 'approved')
+            ->count();
+
+        return [
+            'present' => $present,
+            'late' => $late,
+            'absent' => $absent,
+        ];
+
     }
 }

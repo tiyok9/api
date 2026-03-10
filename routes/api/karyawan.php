@@ -13,5 +13,6 @@ Route::controller(KaryawanController::class)
         Route::get('/{id}',  'getKaryawanById')->name('getKaryawanById');
         Route::post('/store',  'store')->name('store');
         Route::patch('/update/{id}',  'update')->name('update');
+        Route::patch('/update/status/{id}',  'updateStatus')->name('updateStatus');
         Route::delete('/delete/{id}',  'destroy')->name('destroy');
     });

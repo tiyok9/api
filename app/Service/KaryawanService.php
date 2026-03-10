@@ -10,4 +10,5 @@ interface KaryawanService
     public function destroy($id);
 
     public function getKaryawanById($id);
+    public function updateStatus($id);
 }

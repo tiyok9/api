@@ -49,6 +49,7 @@ class AuthController extends Controller
                 $data['user'] = [
                     'id' => $user->id,
                     'username' => $user->username,
+                    'role' => $user->role,
                 ];
 
                 return response()->json($data, 200);
