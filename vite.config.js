@@ -11,8 +11,15 @@ export default defineConfig({
         tailwindcss(),
     ],
     server: {
+        port: 5175,
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        proxy: {
+            '/broadcasting': {
+                target: 'http://127.0.0.1:8000',
+                changeOrigin: true
+            }
+        }
     },
 });

@@ -12,6 +12,3 @@ Route::controller(\App\Http\Controllers\UserController::class)
         Route::delete('/delete/{id}',  'destroy')->name('destroy');
     });
 
-Route::get('test',function(){
-    broadcast(new \App\Events\NotificationUser("New patient registered"));
-});

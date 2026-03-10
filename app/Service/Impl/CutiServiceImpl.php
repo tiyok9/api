@@ -2,6 +2,7 @@
 
 namespace App\Service\Impl;
 
+use App\Notifications\NotificationUser;
 use App\Repositories\CutiRepository;
 use App\Service\CutiService;
 use Exception;
@@ -55,6 +56,15 @@ class CutiServiceImpl implements CutiService
             $data['jumlah_hari'] = $jumlahHari;
             $response = $this->cuti->store($data);
             if ($response) {
+                $user = auth()->user();
+
+                $user->notify(
+                    new NotificationUser(
+                        'Request From '.$user->karyawan->nama.
+                        ' at '.$data['tanggal_mulai'].
+                        ' at '.$data['tanggal_selesai']
+                    )
+                );
                 DB::commit();
                 return true;
             }
