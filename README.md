@@ -105,11 +105,19 @@ Setup Token Passport
 php artisan passport:client --password
 ```
 Copy hasil generate client id dan secret id ke env
-
-```bash
+Contoh konfigurasi:
+```env
 PASSPORT_PASSWORD_CLIENT_ID=019cdde2-1f76-****-a500-*******
 PASSPORT_PASSWORD_CLIENT_SECRET=B5413rxY****a00y9mEg8FOZGC9uEh6a8OtifZ
 ```
+
+Input key reverb di env
+Contoh konfigurasi:
+```env
+REVERB_APP_KEY=
+REVERB_APP_SECRET=
+```
+
 Jalankan Seeder:
 
 ```bash
