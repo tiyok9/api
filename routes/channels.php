@@ -7,5 +7,4 @@ Broadcast::routes([
 ]);
 Broadcast::channel('notifications.{id}', function ($user, $id) {
     return $user->id === $id;
-
 });

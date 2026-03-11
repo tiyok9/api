@@ -3,24 +3,27 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Broadcasting\PrivateChannel;
 
-class NotificationUser extends Notification
+class NotificationUser extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public $message;
+    public $user;
 
-    public function __construct($message)
+    public function __construct($message,$user)
     {
         $this->message = $message;
+        $this->user = $user;
     }
 
     public function via()
     {
-        return ['database', 'broadcast'];
+        return ['database','broadcast'];
     }
 
     public function toArray()
@@ -30,16 +33,15 @@ class NotificationUser extends Notification
         ];
     }
 
-    public function toBroadcast()
+    public function toBroadcast($notifiable)
     {
         return new BroadcastMessage([
             'message' => $this->message
         ]);
     }
 
-
-    public function broadcastType()
+    public function broadcastOn(): PrivateChannel
     {
-        return 'user.notification';
+        return new PrivateChannel('notifications.' . $this->user);
     }
 }

@@ -40,9 +40,14 @@ class CutiServiceImpl implements CutiService
 
         try {
             $tanggalMulai = Carbon::parse($data['tanggal_mulai']);
-            $tanggalSelesai = Carbon::parse($data['tanggal_selesai']) ?? 0 ;
-
-            $jumlahHari = $tanggalMulai->diffInDays($tanggalSelesai) + 1;
+            $tanggalSelesai = !empty($data['tanggal_selesai'])
+                ? Carbon::parse($data['tanggal_selesai'])
+                : null;
+            if ($tanggalSelesai !== 0){
+                $jumlahHari = $this->cuti->getJataHari($data['id_jenis_cuti']);
+            }else{
+                $jumlahHari = $tanggalMulai->diffInDays($tanggalSelesai) + 1;
+            }
             if (isset($data['img']) && $data['img']->isValid()) {
                 $filename = time() . '.' . $data['img']->extension();
                 $imagePath = $data['img']->storeAs('cuti', $filename, 'public');
@@ -50,7 +55,9 @@ class CutiServiceImpl implements CutiService
             } else {
                 unset($data['img']);
             }
-
+            if (empty($data['tanggal_selesai'])){
+                unset($data['tanggal_selesai']);
+            }
             $data['id_karyawan'] = auth('api')->user()->karyawan->id;
             $data['status'] = 'pending';
             $data['jumlah_hari'] = $jumlahHari;
@@ -59,14 +66,13 @@ class CutiServiceImpl implements CutiService
                 $getAdmin = $this->cuti->getAdmin();
                 $user = auth('api')->user();
                 $start = Carbon::parse($data['tanggal_mulai'])->translatedFormat('d F Y');
-                $end = Carbon::parse($data['tanggal_selesai'])->translatedFormat('d F Y');
-
+                $end = !empty($data['tanggal_selesai'])
+                    ? Carbon::parse($data['tanggal_selesai'])->translatedFormat('d F Y')
+                    : '-';
                 foreach ($getAdmin as $admin) {
-                    $admin->notify(new NotificationUser(
-                        'Request from ' . $user->karyawan->nama .
-                        ' from ' . $start .
-                        ' until ' . $end
-                    ));
+                    Log::info($admin->id);
+                    $message = "Request from {$user->karyawan->nama} from {$start} until {$end}";
+                    $admin->notify(new NotificationUser($message,$admin->id));
                 }
 
                 DB::commit();
@@ -88,7 +94,7 @@ class CutiServiceImpl implements CutiService
     {
         DB::beginTransaction();
         try {
-            $data['approved_by'] = auth()->user()->id;
+            $data['approved_by'] = auth('api')->user()->id;
             $data['approved_at'] = now();
             $response = $this->cuti->update($data,$id);
             if ($response) {

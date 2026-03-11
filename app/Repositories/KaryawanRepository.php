@@ -54,8 +54,13 @@ class KaryawanRepository
 
     public function updateStatus($id)
     {
-        return $this->karyawan->where('id',$id)->update(['status' => 1]);
+        $karyawan = $this->karyawan->findOrFail($id);
 
+        return $this->karyawan
+            ->where('id', $id)
+            ->update([
+                'aktif' => !$karyawan->aktif
+            ]);
     }
 
     public function getExport()

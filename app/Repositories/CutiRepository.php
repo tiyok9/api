@@ -4,17 +4,20 @@ namespace App\Repositories;
 
 use App\Http\Resources\Collection\CutiCollection;
 use App\Models\Cuti;
+use App\Models\JenisCuti;
 use App\Models\User;
 
 class CutiRepository
 {
     protected $cuti;
+    protected $jenisCuti;
     protected $user;
 
-    public function __construct(Cuti $cuti,User $user)
+    public function __construct(Cuti $cuti,User $user,JenisCuti $jenisCuti)
     {
         $this->cuti = $cuti;
         $this->user = $user;
+        $this->jenisCuti = $jenisCuti;
     }
 
     public function getData(mixed $search,$perPage)
@@ -50,5 +53,10 @@ class CutiRepository
     {
         return $this->cuti
             ->with(['jenisCuti','karyawan','approve'])->get();
+    }
+
+    public function getJataHari($id)
+    {
+        return $this->jenisCuti->where('id',$id)->first()->jatah_hari;
     }
 }
