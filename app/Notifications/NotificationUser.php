@@ -18,29 +18,25 @@ class NotificationUser extends Notification
         $this->message = $message;
     }
 
-    public function via($notifiable)
+    public function via()
     {
         return ['database', 'broadcast'];
     }
 
-    public function toArray($notifiable)
+    public function toArray()
     {
         return [
             'message' => $this->message
         ];
     }
 
-    public function toBroadcast($notifiable)
+    public function toBroadcast()
     {
         return new BroadcastMessage([
             'message' => $this->message
         ]);
     }
 
-    public function broadcastOn($notifiable)
-    {
-        return new PrivateChannel('notifications.' . $notifiable->id);
-    }
 
     public function broadcastType()
     {

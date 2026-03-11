@@ -20,10 +20,10 @@ class AbsensiServiceImpl implements AbsensiService
     {
         $this->absensi = $absensi;
     }
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->absensi->getData($search);
+            return $this->absensi->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];
@@ -34,6 +34,12 @@ class AbsensiServiceImpl implements AbsensiService
     {
         DB::beginTransaction();
         try {
+            $cekKaryawanAktif = $this->absensi->cekKaryawanAktif($data['nik']);
+            if(!$cekKaryawanAktif){
+                DB::rollBack();
+                return false;
+
+            }
             $cekAbsen = $this->absensi->cekAbsen($data['nik']);
             $getByNik = $this->absensi->getByNik($data['nik']);
 
@@ -56,7 +62,7 @@ class AbsensiServiceImpl implements AbsensiService
                 DB::commit();
                 return $getByNik;
             }
-            DB::commit();
+            DB::rollBack();
             return false;
         }catch (Exception $e){
             DB::rollBack();

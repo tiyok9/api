@@ -22,8 +22,9 @@ class UserController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->user->getData($search);
+        return $this->user->getData($search,$perPage);
     }
 
     public function store(StoreUserRequest $request)

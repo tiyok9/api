@@ -13,7 +13,7 @@ class DepartemenController extends Controller
     /**
      * @param $departemen
      */
-    public function __construct(DepartemenService$departemen)
+    public function __construct(DepartemenService $departemen)
     {
         $this->departemen = $departemen;
     }
@@ -21,8 +21,9 @@ class DepartemenController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->departemen->getData($search);
+        return $this->departemen->getData($search,$perPage);
     }
 
     public function store(DepartemenRequest $request)

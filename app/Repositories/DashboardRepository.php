@@ -3,10 +3,11 @@
 namespace App\Repositories;
 
 use App\Http\Resources\Collection\GraphCollection;
-use App\Http\Resources\GraphResource;
+use App\Http\Resources\GraphClientResource;
 use App\Http\Resources\RekapResource;
 use App\Models\Absensi;
 use App\Models\Cuti;
+use App\Models\JenisCuti;
 use App\Models\Karyawan;
 use Illuminate\Support\Carbon;
 
@@ -15,15 +16,17 @@ class DashboardRepository
     protected $karyawan;
     protected $cuti;
     protected $absensi;
+    protected $jenisCuti;
 
     /**
      * @param $karyawan
      */
-    public function __construct(Karyawan $karyawan,Cuti $cuti,Absensi $absensi)
+    public function __construct(Karyawan $karyawan,Cuti $cuti,Absensi $absensi,JenisCuti $jenisCuti)
     {
         $this->karyawan = $karyawan;
         $this->cuti = $cuti;
         $this->absensi = $absensi;
+        $this->jenisCuti = $jenisCuti;
     }
 
     public function rekap()
@@ -70,5 +73,50 @@ class DashboardRepository
         }
 
         return new GraphCollection($data);
+    }
+
+    public function graphClient($idKaryawan)
+    {
+        $tahun = Carbon::now()->year;
+
+        $cutiDipakai = $this->cuti
+            ->where('id_karyawan', $idKaryawan)
+            ->where('status', 'approved')
+            ->where('using_annual_leave',false)
+            ->whereYear('tanggal_mulai', $tahun)
+            ->sum('jumlah_hari');
+
+        $batasCuti = $this->jenisCuti->sum('jatah_hari');
+
+        $sisaCuti = max($batasCuti - $cutiDipakai, 0);
+
+        $absensiHariIni = $this->absensi
+            ->where('id_karyawan', $idKaryawan)
+            ->whereDate('jam_masuk', Carbon::today())
+            ->first();
+
+        $statusAbsen = 'Not Record';
+
+        if ($absensiHariIni && $absensiHariIni->jam_masuk) {
+
+            $jamMasuk = Carbon::parse($absensiHariIni->jam_masuk);
+            $batasJamMasuk = Carbon::today()->setTime(7, 0, 0);
+
+            $statusAbsen = $jamMasuk->greaterThan($batasJamMasuk)
+                ? 'Late Checked In'
+                : 'Checked In';
+        }
+
+        $pendingRequest = $this->cuti
+            ->where('id_karyawan', $idKaryawan)
+            ->where('status', 'pending')
+            ->whereYear('tanggal_mulai', $tahun)
+            ->count();
+        $data = [
+            'sisa_cuti' => (int) $sisaCuti,
+            'pending_cuti' => (int) $pendingRequest,
+            'absen_hari_ini' => $statusAbsen,
+        ];
+        return new GraphClientResource($data);
     }
 }

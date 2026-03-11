@@ -1,0 +1,196 @@
+openapi: 3.1.0
+info:
+  title: Absensi API
+  version: 1.0.0
+  description: API Sistem Absensi Karyawan
+
+servers:
+  - url: http://localhost/api
+    description: Local API Server
+
+tags:
+  - name: Absensi
+    description: Manajemen Absensi Karyawan
+
+paths:
+
+  /absensi:
+    get:
+      tags:
+        - Absensi
+      summary: Mendapatkan semua data absensi
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian nama karyawan
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List data absensi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Absensi'
+
+  /absensi/user:
+    get:
+      tags:
+        - Absensi
+      summary: Mendapatkan data absensi user yang login
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Data absensi user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AbsensiUser'
+
+  /absensi/rekap:
+    get:
+      tags:
+        - Absensi
+      summary: Mendapatkan rekap absensi
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Rekap absensi
+
+  /absensi/store:
+    post:
+      tags:
+        - Absensi
+      summary: Melakukan absensi (check-in / check-out)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreAbsensiRequest'
+      responses:
+        '200':
+          description: Absensi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Karyawan'
+        '400':
+          description: Absensi gagal
+
+  /absensi/note/{id}:
+    patch:
+      tags:
+        - Absensi
+      summary: Update catatan absensi
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAbsensiRequest'
+      responses:
+        '201':
+          description: Catatan berhasil diperbarui
+        '400':
+          description: Gagal memperbarui catatan
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Absensi:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nama_karyawan:
+          type: string
+          example: Budi Santoso
+        tanggal:
+          type: string
+          format: date
+          example: 2026-03-11
+        jam_masuk:
+          type: string
+          example: "08:00:00"
+        jam_keluar:
+          type: string
+          example: "17:00:00"
+        note:
+          type:
+            - string
+            - "null"
+
+    AbsensiUser:
+      type: object
+      properties:
+        tanggal:
+          type: string
+          format: date
+        jam_masuk:
+          type: string
+        jam_keluar:
+          type: string
+        status:
+          type: string
+          example: hadir
+        note:
+          type:
+            - string
+            - "null"
+
+    StoreAbsensiRequest:
+      type: object
+      required:
+        - nik
+      properties:
+        nik:
+          type: string
+          description: NIK karyawan yang melakukan absensi
+          example: "KRY001"
+
+    UpdateAbsensiRequest:
+      type: object
+      required:
+        - note
+      properties:
+        note:
+          type: string
+          example: Terlambat karena macet
+
+    Karyawan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nama:
+          type: string
+          example: Budi Santoso

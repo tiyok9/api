@@ -3,7 +3,6 @@
 Route::controller(\App\Http\Controllers\DepartemenController::class)
     ->prefix('departemen')
     ->middleware(['auth:api'])
-
     ->name('departemen.')
     ->group(function () {
         Route::get('/',  'getData')->name('index');

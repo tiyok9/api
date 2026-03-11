@@ -1,0 +1,185 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen Cuti Karyawan
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Cuti
+    description: Manajemen pengajuan cuti karyawan
+
+paths:
+
+  /cuti:
+    get:
+      tags:
+        - Cuti
+      summary: Mendapatkan daftar pengajuan cuti
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian nama karyawan
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar cuti berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cuti'
+
+  /cuti/store:
+    post:
+      tags:
+        - Cuti
+      summary: Mengajukan cuti
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCutiRequest'
+      responses:
+        '201':
+          description: Cuti berhasil diajukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cuti'
+        '400':
+          description: Gagal mengajukan cuti
+
+  /cuti/update-status/{id}:
+    patch:
+      tags:
+        - Cuti
+      summary: Update status pengajuan cuti
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID pengajuan cuti
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStatusCutiRequest'
+      responses:
+        '201':
+          description: Status cuti berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cuti'
+        '400':
+          description: Gagal memperbarui status cuti
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Cuti:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        karyawan:
+          type: string
+          example: Budi Santoso
+
+        jenis_cuti:
+          type: string
+          example: Cuti Tahunan
+
+        tanggal_mulai:
+          type: string
+          example: 10 Juni 2026
+
+        tanggal_selesai:
+          type: string
+          example: 12 Juni 2026
+
+        jumlah_hari:
+          type: integer
+          example: 3
+
+        alasan:
+          type: string
+          example: Acara keluarga
+
+        status:
+          type: string
+          enum:
+            - pending
+            - approved
+            - rejected
+          example: pending
+
+
+    StoreCutiRequest:
+      type: object
+      required:
+        - id_jenis_cuti
+        - tanggal_mulai
+        - alasan
+      properties:
+
+        id_jenis_cuti:
+          type: integer
+          description: ID jenis cuti
+          example: 1
+
+        tanggal_mulai:
+          type: string
+          format: date
+          example: 2026-06-10
+
+        tanggal_selesai:
+          type:
+            - string
+            - "null"
+          format: date
+          example: 2026-06-12
+
+        alasan:
+          type: string
+          example: Acara keluarga
+
+
+    UpdateStatusCutiRequest:
+      type: object
+      required:
+        - status
+      properties:
+
+        status:
+          type: string
+          enum:
+            - approved
+            - rejected
+          example: approved

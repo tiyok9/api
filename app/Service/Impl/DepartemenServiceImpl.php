@@ -19,10 +19,10 @@ class DepartemenServiceImpl implements DepartemenService
         $this->departemen = $departemen;
     }
 
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->departemen->getData($search);
+            return $this->departemen->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];

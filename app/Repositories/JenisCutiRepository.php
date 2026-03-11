@@ -18,7 +18,7 @@ class JenisCutiRepository
         $this->jenisCuti = $jenisCuti;
     }
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
         $query = $this->jenisCuti->query();
 
@@ -26,7 +26,7 @@ class JenisCutiRepository
             $query->where('jenis_cuti', 'like', '%' . $search . '%');
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new JenisCutiCollection($data);
     }
 

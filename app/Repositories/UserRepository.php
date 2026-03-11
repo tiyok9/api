@@ -19,7 +19,7 @@ class UserRepository
     }
 
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
         $query = $this->user->with('karyawan');
 
@@ -27,7 +27,7 @@ class UserRepository
             $query->where('username', 'like', '%' . $search . '%');
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new UserCollection($data);
     }
 

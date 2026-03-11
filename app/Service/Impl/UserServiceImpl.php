@@ -20,10 +20,10 @@ class UserServiceImpl implements UserService
         $this->user = $user;
     }
 
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->user->getData($search);
+            return $this->user->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];

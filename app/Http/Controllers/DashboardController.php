@@ -26,4 +26,10 @@ class DashboardController extends Controller
     {
         return $this->dashboard->graph();
     }
+
+    public function graphClient()
+    {
+        return $this->dashboard->graphClient();
+
+    }
 }

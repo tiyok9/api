@@ -31,6 +31,13 @@ class AuthController extends Controller
             $user = User::where('username', $validator['username'])->first();
 
             if ($user) {
+                $cekAktif = $user->karyawan->aktif;
+                if (!$cekAktif) {
+                    return response()->json([
+                        'message' => 'User Deactivated'
+                    ], 400);
+                }
+
                 $proxy = request()->create('/oauth/token', 'POST', [
                     'grant_type' => 'password',
                     'client_id' => config('passport.password_client_id'),
@@ -53,11 +60,12 @@ class AuthController extends Controller
                 ];
 
                 return response()->json($data, 200);
+            }else{
+                return response()->json([
+                    'message' => 'Username atau password salah'
+                ], 400);
             }
 
-            return response()->json([
-                'message' => 'Terjadi kesalahan pada server'
-            ], 500);
         } catch (Throwable $e) {
             Log::error('Login Error: '.$e->getMessage());
             return response()->json([

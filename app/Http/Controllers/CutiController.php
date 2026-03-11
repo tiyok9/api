@@ -23,8 +23,9 @@ class CutiController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->cuti->getData($search);
+        return $this->cuti->getData($search,$perPage);
     }
 
     public function store(StoreCutiRequest $request)

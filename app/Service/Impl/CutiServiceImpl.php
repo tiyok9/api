@@ -23,10 +23,10 @@ class CutiServiceImpl implements CutiService
         $this->cuti = $cuti;
     }
 
-    public function getData($search = '')
+    public function getData($search = '', $perPage=10)
     {
         try {
-            return $this->cuti->getData($search);
+            return $this->cuti->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];
@@ -51,20 +51,24 @@ class CutiServiceImpl implements CutiService
                 unset($data['img']);
             }
 
-            $data['id_karyawan'] = auth()->user()->karyawan->id ?? 'b0c5e6ce-4a81-4292-85c6-9e7966a262da';
+            $data['id_karyawan'] = auth('api')->user()->karyawan->id;
             $data['status'] = 'pending';
             $data['jumlah_hari'] = $jumlahHari;
             $response = $this->cuti->store($data);
             if ($response) {
-                $user = auth()->user();
+                $getAdmin = $this->cuti->getAdmin();
+                $user = auth('api')->user();
+                $start = Carbon::parse($data['tanggal_mulai'])->translatedFormat('d F Y');
+                $end = Carbon::parse($data['tanggal_selesai'])->translatedFormat('d F Y');
 
-                $user->notify(
-                    new NotificationUser(
-                        'Request From '.$user->karyawan->nama.
-                        ' at '.$data['tanggal_mulai'].
-                        ' at '.$data['tanggal_selesai']
-                    )
-                );
+                foreach ($getAdmin as $admin) {
+                    $admin->notify(new NotificationUser(
+                        'Request from ' . $user->karyawan->nama .
+                        ' from ' . $start .
+                        ' until ' . $end
+                    ));
+                }
+
                 DB::commit();
                 return true;
             }
@@ -84,7 +88,7 @@ class CutiServiceImpl implements CutiService
     {
         DB::beginTransaction();
         try {
-            $data['approved_by'] = auth()->user()->id ?? '1eb2b999-33a1-48ca-bd18-2be4a2f80ab5';
+            $data['approved_by'] = auth()->user()->id;
             $data['approved_at'] = now();
             $response = $this->cuti->update($data,$id);
             if ($response) {

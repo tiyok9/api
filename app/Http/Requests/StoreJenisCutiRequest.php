@@ -27,7 +27,7 @@ class StoreJenisCutiRequest extends FormRequest
             'jenis_cuti' => 'required|string',
             'jatah_hari' => 'required|integer',
             'require_attachment' => 'required|boolean',
-            'require_attachment' => 'required|boolean',
+            'require_end_date' => 'required|boolean',
         ];
     }
 

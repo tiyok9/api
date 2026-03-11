@@ -12,3 +12,9 @@ Route::controller(\App\Http\Controllers\AbsensiController::class)
         Route::patch('/note/{id}',  'note')->name('note');
     });
 
+Route::controller(\App\Http\Controllers\AbsensiController::class)
+    ->prefix('absensi')
+    ->name('absensi.')
+    ->group(function () {
+        Route::post('/store',  'absen')->name('absen');
+    });

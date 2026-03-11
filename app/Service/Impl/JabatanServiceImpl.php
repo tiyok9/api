@@ -20,10 +20,10 @@ class JabatanServiceImpl implements JabatanService
     }
 
 
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->jabatan->getData($search);
+            return $this->jabatan->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];

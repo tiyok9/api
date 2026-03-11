@@ -1,0 +1,80 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Dashboard HR System
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Dashboard
+    description: Data dashboard sistem HR
+
+paths:
+
+  /dash/rekap:
+    get:
+      tags:
+        - Dashboard
+      summary: Mendapatkan rekap data dashboard
+      responses:
+        '200':
+          description: Data rekap dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardRekap'
+
+  /dash/graph:
+    get:
+      tags:
+        - Dashboard
+      summary: Mendapatkan data grafik absensi dan cuti
+      responses:
+        '200':
+          description: Data grafik dashboard
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DashboardGraph'
+
+components:
+
+  schemas:
+
+    DashboardRekap:
+      type: object
+      properties:
+
+        total_karyawan:
+          type: integer
+          example: 120
+
+        karyawan_aktif:
+          type: integer
+          example: 110
+
+        cuti_bulan_ini:
+          type: integer
+          example: 8
+
+
+    DashboardGraph:
+      type: object
+      properties:
+
+        month:
+          type: string
+          example: Januari
+
+        hadir:
+          type: integer
+          example: 95
+
+        cuti:
+          type: integer
+          example: 5

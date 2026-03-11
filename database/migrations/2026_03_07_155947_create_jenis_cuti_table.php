@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('jatah_hari');
             $table->boolean('require_attachment')->default(false);
             $table->boolean('require_end_date')->default(false);
+            $table->boolean('using_annual_leave')->default(false);
             $table->timestamps();
         });
     }

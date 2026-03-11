@@ -1,0 +1,168 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen Departemen
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Departemen
+    description: Manajemen data departemen perusahaan
+
+paths:
+
+  /departemen:
+    get:
+      tags:
+        - Departemen
+      summary: Mendapatkan daftar departemen
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian nama departemen
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar departemen berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Departemen'
+
+  /departemen/{id}:
+    get:
+      tags:
+        - Departemen
+      summary: Mendapatkan departemen berdasarkan ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID departemen
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data departemen ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Departemen'
+        '404':
+          description: Departemen tidak ditemukan
+
+  /departemen/store:
+    post:
+      tags:
+        - Departemen
+      summary: Menambahkan departemen baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartemenRequest'
+      responses:
+        '201':
+          description: Departemen berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Departemen'
+        '400':
+          description: Gagal membuat departemen
+
+  /departemen/update/{id}:
+    patch:
+      tags:
+        - Departemen
+      summary: Update data departemen
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID departemen
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartemenRequest'
+      responses:
+        '201':
+          description: Departemen berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Departemen'
+        '400':
+          description: Gagal memperbarui departemen
+
+  /departemen/delete/{id}:
+    delete:
+      tags:
+        - Departemen
+      summary: Menghapus departemen
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID departemen
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Departemen berhasil dihapus
+        '400':
+          description: Gagal menghapus departemen
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Departemen:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+
+        departemen:
+          type: string
+          example: Human Resource
+
+    DepartemenRequest:
+      type: object
+      required:
+        - departemen
+      properties:
+
+        departemen:
+          type: string
+          maxLength: 150
+          example: Human Resource

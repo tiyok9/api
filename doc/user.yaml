@@ -1,0 +1,221 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen User Sistem
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: User
+    description: Manajemen user sistem
+
+paths:
+
+  /user:
+    get:
+      tags:
+        - User
+      summary: Mendapatkan daftar user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian username
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar user berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Mendapatkan user berdasarkan ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID user
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data user ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User tidak ditemukan
+
+  /user/store:
+    post:
+      tags:
+        - User
+      summary: Membuat user baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreUserRequest'
+      responses:
+        '201':
+          description: User berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Gagal membuat user
+
+  /user/update/{id}:
+    patch:
+      tags:
+        - User
+      summary: Update data user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID user
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '201':
+          description: User berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Gagal memperbarui user
+
+  /user/delete/{id}:
+    delete:
+      tags:
+        - User
+      summary: Menghapus user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID user
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: User berhasil dihapus
+        '400':
+          description: Gagal menghapus user
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    User:
+      type: object
+      properties:
+
+        id:
+          type: integer
+          example: 1
+
+        username:
+          type: string
+          example: admin
+
+        name:
+          type: string
+          example: Budi Santoso
+
+
+    StoreUserRequest:
+      type: object
+      required:
+        - username
+        - password
+        - id_karyawan
+        - role
+      properties:
+
+        username:
+          type: string
+          example: admin
+
+        password:
+          type: string
+          example: password123
+
+        id_karyawan:
+          type: integer
+          example: 5
+
+        role:
+          type: string
+          enum:
+            - admin
+            - karyawan
+          example: admin
+
+
+    UpdateUserRequest:
+      type: object
+      required:
+        - username
+        - id_karyawan
+        - role
+      properties:
+
+        username:
+          type: string
+          example: admin
+
+        password:
+          type:
+            - string
+            - "null"
+          example: password123
+
+        id_karyawan:
+          type: integer
+          example: 5
+
+        role:
+          type: string
+          enum:
+            - admin
+            - karyawan
+          example: karyawan

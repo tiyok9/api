@@ -18,7 +18,7 @@ class JabatanRepsitory
         $this->jabatan = $jabatan;
     }
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
         $query = $this->jabatan->with('departemen');
 
@@ -26,7 +26,7 @@ class JabatanRepsitory
             $query->where('jabatan', 'like', '%' . $search . '%');
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new JabatanCollection($data);
     }
 

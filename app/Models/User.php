@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\HashId\HashId;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -58,5 +59,10 @@ class User extends Authenticatable implements OAuthenticatable
     public function findForPassport($username)
     {
         return $this->where('username', $username)->first();
+    }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+        return new PrivateChannel('user.notification.' . $this->id);
     }
 }

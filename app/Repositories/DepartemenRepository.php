@@ -18,7 +18,7 @@ class DepartemenRepository
         $this->departemen = $departemen;
     }
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
         $query = $this->departemen->query();
 
@@ -26,7 +26,7 @@ class DepartemenRepository
             $query->where('departemen', 'like', '%' . $search . '%');
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new DepartemenCollection($data);
     }
 

@@ -10,6 +10,4 @@ require __DIR__ . '/api/karyawan.php';
 require __DIR__ . '/api/user.php';
 require __DIR__ . '/api/auth.php';
 require __DIR__ . '/api/dashboard.php';
-
-
-
+require __DIR__ . '/api/notification.php';

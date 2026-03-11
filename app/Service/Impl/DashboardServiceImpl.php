@@ -38,4 +38,16 @@ class DashboardServiceImpl implements DashboardService
             return [];
         }
     }
+
+    public function graphClient()
+    {
+        try {
+            $idKaryawan = auth('api')->user()->id_karyawan;
+            return $this->dashboard->graphClient($idKaryawan);
+        }catch (Exception $e){
+
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
 }

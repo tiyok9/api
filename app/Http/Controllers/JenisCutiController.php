@@ -21,8 +21,9 @@ class JenisCutiController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->jenisCuti->getData($search);
+        return $this->jenisCuti->getData($search,$perPage);
     }
 
     public function store(StoreJenisCutiRequest $request)

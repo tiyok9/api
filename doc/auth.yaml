@@ -1,0 +1,217 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: Authentication API menggunakan Laravel Passport
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Auth
+    description: Authentication dan session user
+
+paths:
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Login user
+      description: Login menggunakan username dan password untuk mendapatkan access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+        '401':
+          description: Username atau password salah
+
+        '422':
+          description: Validation error
+
+  /auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Refresh access token
+      description: Menggunakan refresh token untuk mendapatkan access token baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+
+        '401':
+          description: Refresh token tidak valid
+
+  /auth/profile:
+    get:
+      tags:
+        - Auth
+      summary: Mendapatkan profil user yang login
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Data user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logout user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+
+components:
+
+  securitySchemes:
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+
+        username:
+          type: string
+          example: admin
+
+        password:
+          type: string
+          minLength: 6
+          example: password123
+
+
+    LoginResponse:
+      type: object
+      properties:
+
+        token_type:
+          type: string
+          example: Bearer
+
+        expires_in:
+          type: integer
+          example: 31536000
+
+        access_token:
+          type: string
+          example: eyJ0eXAiOiJKV1QiLCJh...
+
+        refresh_token:
+          type: string
+          example: def50200ab...
+
+        user:
+          type: object
+          properties:
+
+            id:
+              type: integer
+              example: 1
+
+            username:
+              type: string
+              example: admin
+
+            role:
+              type: string
+              enum:
+                - admin
+                - karyawan
+              example: admin
+
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refresh_token
+      properties:
+
+        refresh_token:
+          type: string
+          example: def50200ab...
+
+
+    TokenResponse:
+      type: object
+      properties:
+
+        token_type:
+          type: string
+          example: Bearer
+
+        expires_in:
+          type: integer
+          example: 31536000
+
+        access_token:
+          type: string
+
+        refresh_token:
+          type: string
+
+
+    UserProfile:
+      type: object
+      properties:
+
+        id:
+          type: integer
+          example: 1
+
+        username:
+          type: string
+          example: admin
+
+        role:
+          type: string
+          example: admin
+
+
+    LogoutResponse:
+      type: object
+      properties:
+
+        message:
+          type: string
+          example: Logout berhasil

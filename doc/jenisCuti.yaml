@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen Jenis Cuti
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Jenis Cuti
+    description: Manajemen jenis cuti karyawan
+
+paths:
+
+  /jenis-cuti:
+    get:
+      tags:
+        - Jenis Cuti
+      summary: Mendapatkan daftar jenis cuti
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian jenis cuti
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar jenis cuti berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JenisCuti'
+
+  /jenis-cuti/{id}:
+    get:
+      tags:
+        - Jenis Cuti
+      summary: Mendapatkan jenis cuti berdasarkan ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jenis cuti
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data jenis cuti ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JenisCuti'
+        '404':
+          description: Jenis cuti tidak ditemukan
+
+  /jenis-cuti/store:
+    post:
+      tags:
+        - Jenis Cuti
+      summary: Menambahkan jenis cuti baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreJenisCutiRequest'
+      responses:
+        '201':
+          description: Jenis cuti berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JenisCuti'
+        '400':
+          description: Gagal membuat jenis cuti
+
+  /jenis-cuti/update/{id}:
+    patch:
+      tags:
+        - Jenis Cuti
+      summary: Update jenis cuti
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jenis cuti
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreJenisCutiRequest'
+      responses:
+        '201':
+          description: Jenis cuti berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JenisCuti'
+        '400':
+          description: Gagal memperbarui jenis cuti
+
+  /jenis-cuti/delete/{id}:
+    delete:
+      tags:
+        - Jenis Cuti
+      summary: Menghapus jenis cuti
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jenis cuti
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Jenis cuti berhasil dihapus
+        '400':
+          description: Gagal menghapus jenis cuti
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    JenisCuti:
+      type: object
+      properties:
+
+        id:
+          type: integer
+          example: 1
+
+        jenis_cuti:
+          type: string
+          example: Cuti Tahunan
+
+        jatah_hari:
+          type: integer
+          example: 12
+
+        require_end_date:
+          type: boolean
+          example: true
+
+        require_attachment:
+          type: boolean
+          example: false
+
+    StoreJenisCutiRequest:
+      type: object
+      required:
+        - jenis_cuti
+        - jatah_hari
+        - require_attachment
+        - require_end_date
+      properties:
+
+        jenis_cuti:
+          type: string
+          example: Cuti Tahunan
+
+        jatah_hari:
+          type: integer
+          example: 12
+
+        require_attachment:
+          type: boolean
+          example: false
+
+        require_end_date:
+          type: boolean
+          example: true

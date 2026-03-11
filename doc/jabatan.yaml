@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen Jabatan Karyawan
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Jabatan
+    description: Manajemen jabatan dalam perusahaan
+
+paths:
+
+  /jabatan:
+    get:
+      tags:
+        - Jabatan
+      summary: Mendapatkan daftar jabatan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian nama jabatan
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar jabatan berhasil diambil
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Jabatan'
+
+  /jabatan/{id}:
+    get:
+      tags:
+        - Jabatan
+      summary: Mendapatkan jabatan berdasarkan ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jabatan
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data jabatan ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jabatan'
+        '404':
+          description: Jabatan tidak ditemukan
+
+  /jabatan/store:
+    post:
+      tags:
+        - Jabatan
+      summary: Menambahkan jabatan baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreJabatanRequest'
+      responses:
+        '201':
+          description: Jabatan berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jabatan'
+        '400':
+          description: Gagal membuat jabatan
+
+  /jabatan/update/{id}:
+    patch:
+      tags:
+        - Jabatan
+      summary: Update data jabatan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jabatan
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreJabatanRequest'
+      responses:
+        '201':
+          description: Jabatan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Jabatan'
+        '400':
+          description: Gagal memperbarui jabatan
+
+  /jabatan/delete/{id}:
+    delete:
+      tags:
+        - Jabatan
+      summary: Menghapus jabatan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID jabatan
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Jabatan berhasil dihapus
+        '400':
+          description: Gagal menghapus jabatan
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Jabatan:
+      type: object
+      properties:
+
+        id:
+          type: integer
+          example: 1
+
+        nama_jabatan:
+          type: string
+          example: Software Engineer
+
+        departemen:
+          type: string
+          example: IT
+
+    StoreJabatanRequest:
+      type: object
+      required:
+        - jabatan
+        - id_departemen
+      properties:
+
+        jabatan:
+          type: string
+          maxLength: 150
+          example: Software Engineer
+
+        id_departemen:
+          type: integer
+          example: 2

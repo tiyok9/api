@@ -19,10 +19,10 @@ class JenisCutiServiceImpl implements JenisCutiService
         $this->jenisCuti = $jenisCuti;
     }
 
-    public function getData($search = '')
+    public function getData($search = '',$perPage=10)
     {
         try {
-            return $this->jenisCuti->getData($search);
+            return $this->jenisCuti->getData($search,$perPage);
         }catch (Exception $e){
             Log::error($e->getMessage());
             return [];

@@ -23,8 +23,9 @@ class AbsensiController extends Controller
     public function getData(Request $request)
     {
         $search = $request->search;
+        $perPage = $request->per_page;
 
-        return $this->absensi->getData($search);
+        return $this->absensi->getData($search,$perPage);
     }
 
     public function getDataUser()

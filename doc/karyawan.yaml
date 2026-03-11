@@ -1,0 +1,273 @@
+openapi: 3.1.0
+info:
+  title: HR System API
+  version: 1.0.0
+  description: API Manajemen Data Karyawan
+
+servers:
+  - url: http://localhost/api
+    description: Local Development Server
+
+tags:
+  - name: Karyawan
+    description: Manajemen data karyawan
+
+paths:
+
+  /karyawan:
+    get:
+      tags:
+        - Karyawan
+      summary: Mendapatkan daftar karyawan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          required: false
+          description: Pencarian nama karyawan
+          schema:
+            type: string
+
+        - name: per_page
+          in: query
+          required: false
+          description: Jumlah data per halaman
+          schema:
+            type: integer
+            example: 10
+
+      responses:
+        '200':
+          description: Daftar karyawan berhasil diambil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KaryawanPagination'
+
+  /karyawan/{id}:
+    get:
+      tags:
+        - Karyawan
+      summary: Mendapatkan karyawan berdasarkan ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID karyawan
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data karyawan ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Karyawan'
+
+        '404':
+          description: Karyawan tidak ditemukan
+
+  /karyawan/store:
+    post:
+      tags:
+        - Karyawan
+      summary: Menambahkan karyawan baru
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreKaryawanRequest'
+      responses:
+        '201':
+          description: Karyawan berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Karyawan'
+
+        '400':
+          description: Gagal membuat karyawan
+
+  /karyawan/update/{id}:
+    patch:
+      tags:
+        - Karyawan
+      summary: Update data karyawan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID karyawan
+          schema:
+            type: integer
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreKaryawanRequest'
+
+      responses:
+        '201':
+          description: Karyawan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Karyawan'
+
+        '400':
+          description: Gagal memperbarui karyawan
+
+  /karyawan/update/status/{id}:
+    patch:
+      tags:
+        - Karyawan
+      summary: Mengubah status aktif karyawan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID karyawan
+          schema:
+            type: integer
+
+      responses:
+        '201':
+          description: Status karyawan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Karyawan'
+
+        '400':
+          description: Gagal mengubah status karyawan
+
+  /karyawan/delete/{id}:
+    delete:
+      tags:
+        - Karyawan
+      summary: Menghapus karyawan
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID karyawan
+          schema:
+            type: integer
+
+      responses:
+        '201':
+          description: Karyawan berhasil dihapus
+        '400':
+          description: Gagal menghapus karyawan
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    Karyawan:
+      type: object
+      properties:
+
+        id:
+          type: integer
+          example: 1
+
+        nama:
+          type: string
+          example: Budi Santoso
+
+        nik:
+          type: string
+          example: "3201123456789012"
+
+        no_hp:
+          type: string
+          example: "081234567890"
+
+        aktif:
+          type: boolean
+          example: true
+
+        alamat:
+          type: string
+          example: Bandung, Jawa Barat
+
+        jabatan:
+          type: string
+          example: Software Engineer
+
+
+    StoreKaryawanRequest:
+      type: object
+      required:
+        - nama
+        - nik
+        - no_hp
+        - alamat
+        - id_jabatan
+      properties:
+
+        nama:
+          type: string
+          maxLength: 150
+          example: Budi Santoso
+
+        nik:
+          type: string
+          description: NIK harus 16 digit
+          example: "3201123456789012"
+
+        no_hp:
+          type: string
+          description: Nomor HP 10-13 digit
+          example: "081234567890"
+
+        alamat:
+          type: string
+          example: Bandung, Jawa Barat
+
+        id_jabatan:
+          type: integer
+          example: 3
+
+
+    KaryawanPagination:
+      type: object
+      properties:
+
+        current_page:
+          type: integer
+          example: 1
+
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Karyawan'
+
+        total:
+          type: integer
+          example: 100
+
+        per_page:
+          type: integer
+          example: 10

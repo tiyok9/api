@@ -25,7 +25,7 @@ class AbsensiRepository
         $this->cuti = $cuti;
     }
 
-    public function getData(mixed $search)
+    public function getData(mixed $search,$perPage)
     {
         $query = $this->absensi->query();
 
@@ -35,7 +35,7 @@ class AbsensiRepository
             });
         }
 
-        $data = $query->paginate(10);
+        $data = $query->paginate($perPage);
         return new AbsensiCollection($data);
     }
 
@@ -108,5 +108,10 @@ class AbsensiRepository
             'absent' => $absent,
         ];
 
+    }
+
+    public function cekKaryawanAktif($nik)
+    {
+        return $this->karyawan->where('nik', $nik)->where('aktif',true)->exists();
     }
 }
