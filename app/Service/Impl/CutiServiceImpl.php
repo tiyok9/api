@@ -103,4 +103,14 @@ class CutiServiceImpl implements CutiService
             return false;
         }
     }
+
+    public function getExport()
+    {
+        try {
+            return $this->cuti->getExport();
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
 }

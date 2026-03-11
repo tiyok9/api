@@ -80,13 +80,15 @@ class DashboardRepository
         $tahun = Carbon::now()->year;
 
         $cutiDipakai = $this->cuti
+            ->whereHas('jenisCuti', function ($query)  {
+                $query->where('using_annual_leave',true) ;
+            })
             ->where('id_karyawan', $idKaryawan)
             ->where('status', 'approved')
-            ->where('using_annual_leave',false)
             ->whereYear('tanggal_mulai', $tahun)
             ->sum('jumlah_hari');
 
-        $batasCuti = $this->jenisCuti->sum('jatah_hari');
+        $batasCuti = $this->jenisCuti->where('using_annual_leave',true) ->sum('jatah_hari');
 
         $sisaCuti = max($batasCuti - $cutiDipakai, 0);
 

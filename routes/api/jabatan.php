@@ -3,7 +3,7 @@
 
 Route::controller(\App\Http\Controllers\JabatanController::class)
     ->prefix('jabatan')
-    ->middleware(['auth:api'])
+    ->middleware(['auth:api', \App\Http\Middleware\RoleMiddleware::class . ':admin'])
 
     ->name('jabatan.')
     ->group(function () {

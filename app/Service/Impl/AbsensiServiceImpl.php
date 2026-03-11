@@ -110,4 +110,14 @@ class AbsensiServiceImpl implements AbsensiService
             return [];
         }
     }
+
+    public function getExport()
+    {
+        try {
+            return $this->absensi->getExport();
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return [];
+        }
+    }
 }

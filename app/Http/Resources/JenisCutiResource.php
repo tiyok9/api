@@ -20,6 +20,7 @@ class JenisCutiResource extends JsonResource
             'jatah_hari' => $this->jatah_hari,
             'require_end_date' => $this->require_end_date,
             'require_attachment' => $this->require_attachment,
+            'using_annual_leave' => $this->using_annual_leave,
         ];
     }
 }

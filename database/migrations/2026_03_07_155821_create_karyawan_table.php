@@ -15,10 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->char('nik', 16)->unique();
-            $table->string('no_hp',15);
+            $table->string('no_hp',15)->unique();
             $table->text('alamat');
             $table->boolean('aktif')->default(true);
-            $table->uuid('id_jabatan')->nullable();
+            $table->uuid('id_jabatan');
             $table->foreign('id_jabatan')->references('id')->on('jabatan')->onDelete('restrict');
             $table->timestamps();
         });

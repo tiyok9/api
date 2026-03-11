@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jabatan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('jabatan');
-            $table->uuid('id_departemen')->nullable();
+            $table->uuid('id_departemen');
             $table->foreign('id_departemen')->references('id')->on('departemen')->onDelete('restrict');
 
             $table->timestamps();

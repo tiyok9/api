@@ -11,4 +11,5 @@ interface KaryawanService
 
     public function getKaryawanById($id);
     public function updateStatus($id);
+    public function getExport();
 }

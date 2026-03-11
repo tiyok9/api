@@ -78,4 +78,14 @@ class KaryawanServiceImpl implements KaryawanService
             return false;
         }
     }
+
+    public function getExport()
+    {
+        try {
+            return $this->karyawan->getExport();
+        }catch (Exception $e){
+            Log::error($e->getMessage());
+            return false;
+        }
+    }
 }

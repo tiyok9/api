@@ -9,4 +9,5 @@ interface AbsensiService
     public function note(mixed $data,$id);
     public function getDataUser();
     public function getRekap();
+    public function getExport();
 }

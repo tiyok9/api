@@ -16,7 +16,7 @@ return new class extends Migration
             $table->dropColumn('email')->unique();
             $table->dropColumn('email_verified_at')->nullable();
             $table->string('username')->unique();
-            $table->uuid('id_karyawan')->nullable();
+            $table->uuid('id_karyawan')->unique();
             $table->foreign('id_karyawan')->references('id')->on('karyawan')->onDelete('restrict');
 
         });

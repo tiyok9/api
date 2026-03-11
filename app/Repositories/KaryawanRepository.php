@@ -57,4 +57,12 @@ class KaryawanRepository
         return $this->karyawan->where('id',$id)->update(['status' => 1]);
 
     }
+
+    public function getExport()
+    {
+        return $this->karyawan
+            ->select('id','nama','nik','no_hp','alamat','id_jabatan','aktif')
+            ->with('jabatan')
+            ->get();
+    }
 }

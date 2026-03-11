@@ -28,6 +28,7 @@ class StoreJenisCutiRequest extends FormRequest
             'jatah_hari' => 'required|integer',
             'require_attachment' => 'required|boolean',
             'require_end_date' => 'required|boolean',
+            'using_annual_leave' => 'required|boolean',
         ];
     }
 

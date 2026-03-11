@@ -24,4 +24,9 @@ class Cuti extends Model
     {
         return $this->belongsTo(Karyawan::class, 'id_karyawan','id');
     }
+
+    public function approve()
+    {
+        return $this->belongsTo(User::class, 'approved_By','id');
+    }
 }

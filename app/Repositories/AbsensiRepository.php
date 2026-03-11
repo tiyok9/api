@@ -27,7 +27,14 @@ class AbsensiRepository
 
     public function getData(mixed $search,$perPage)
     {
-        $query = $this->absensi->query();
+        $query = $this->absensi ->selectRaw("
+            *,
+            CASE
+                WHEN jam_masuk::time <= '07:00:00' THEN 'present'
+                ELSE 'late'
+            END as status
+        ")->whereDate('tanggal', now()->toDateString())
+            ->with('karyawan');
 
         if (!empty($search)) {
             $query->whereHas('karyawan',function ($q) use ($search) {
@@ -113,5 +120,17 @@ class AbsensiRepository
     public function cekKaryawanAktif($nik)
     {
         return $this->karyawan->where('nik', $nik)->where('aktif',true)->exists();
+    }
+
+    public function getExport()
+    {
+        return $this->absensi ->selectRaw("
+            *,
+            CASE
+                WHEN jam_masuk::time <= '07:00:00' THEN 'present'
+                ELSE 'late'
+            END as status
+        ")
+            ->with('karyawan')->get();
     }
 }

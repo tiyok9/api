@@ -19,15 +19,6 @@ class User extends Authenticatable implements OAuthenticatable
     public $incrementing = false;
     protected $keyType = 'string';
     protected $primaryKey = 'id';
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'username',
-        'password',
-    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,7 +46,10 @@ class User extends Authenticatable implements OAuthenticatable
     {
         return $this->belongsTo(Karyawan::class, 'id_karyawan','id');
     }
-
+    public function cutiApprove()
+    {
+        return $this->hasMany(User::class, 'approved_By','id');
+    }
     public function findForPassport($username)
     {
         return $this->where('username', $username)->first();

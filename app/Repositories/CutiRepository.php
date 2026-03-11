@@ -45,4 +45,10 @@ class CutiRepository
     {
         return $this->user->where('role','admin')->get();
     }
+
+    public function getExport()
+    {
+        return $this->cuti
+            ->with(['jenisCuti','karyawan','approve'])->get();
+    }
 }

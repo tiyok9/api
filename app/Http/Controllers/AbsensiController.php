@@ -7,6 +7,9 @@ use App\Http\Requests\UpdateAbsensiRequest;
 use App\Http\Resources\KaryawanResource;
 use App\Service\AbsensiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class AbsensiController extends Controller
 {
@@ -56,5 +59,68 @@ class AbsensiController extends Controller
     public function getRekap()
     {
         return $this->absensi->getRekap();
+    }
+    public function export()
+    {
+        try {
+
+            $fileName = "absensi.csv";
+
+            $headers = [
+                "Content-Type" => "text/csv",
+                "Content-Disposition" => "attachment; filename=$fileName",
+            ];
+
+            $callback = function () {
+
+                $file = fopen('php://output', 'w');
+
+                fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+                fputcsv($file, [
+                    'Nama Karyawan',
+                    'Tanggal',
+                    'Jam Masuk',
+                    'Jam Keluar',
+                    'Status',
+                    'Catatan'
+                ]);
+
+                $data = $this->absensi->getExport();
+
+                foreach ($data as $item) {
+                    $status = Carbon::parse($item->jam_masuk)->format('H:i:s') <= '07:00:00'
+                        ? 'Present'
+                        : 'Late';
+
+                    fputcsv($file, [
+                        $item->karyawan?->nama ?? '-',
+                        Carbon::parse($item->tanggal)->translatedFormat('l, d F Y'),
+                        Carbon::parse($item->jam_masuk)->format('H:i'),
+                        $item->jam_keluar
+                            ? Carbon::parse($item->jam_keluar)->format('H:i')
+                            : 'Not Checked Out',
+                        $status,
+                        $item->note ?? '-'
+                    ]);
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+
+        } catch (Throwable $e) {
+
+            Log::error('Export Absensi CSV Failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal export data absensi'
+            ], 500);
+        }
     }
 }

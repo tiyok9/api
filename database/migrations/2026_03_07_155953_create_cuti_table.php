@@ -13,7 +13,7 @@ return new class extends Migration
     {
             Schema::create('cuti', function (Blueprint $table) {
                 $table->uuid('id')->primary();
-                $table->uuid('id_karyawan')->nullable();
+                $table->uuid('id_karyawan');
                 $table->foreign('id_karyawan')->references('id')->on('karyawan')->onDelete('restrict');
                 $table->uuid('id_jenis_cuti')->nullable();
                 $table->foreign('id_jenis_cuti')->references('id')->on('jenis_cuti')->onDelete('restrict');
